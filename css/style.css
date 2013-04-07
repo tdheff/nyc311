@@ -112,3 +112,25 @@ path {
     stroke: #111111;
     fill: #333333;
 }
+
+#tooltip {
+    height: 28px;
+    background: #333333;
+    position: absolute;
+    border: solid 1px #eeeeee;
+    color: #eeeeee;
+    padding: 5px;
+    display: none;
+}
+
+#tooltip-data {
+    font-size: 0.7em;
+}
+
+#tooltip-data p {
+    display: inline;
+}
+
+#tooltip-zip {
+    font-weight: bold;
+}

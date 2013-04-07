@@ -33,16 +33,20 @@ var complaints = ["Broken Elevator",
 
 var temp = null;
 var selected = null;
+var data = null;
 
 $(document).ready(function() {
     var zipList = document.getElementById("json-zips").value;
-    changeComplaint("Broken Elevator", zipList, colors.blue);
-    $("#map path").hover(mousein,mouseout);
+    data = changeComplaint("Broken Elevator", zipList, colors.blue);
+
+    $("#map path").hoverIntent(mousein,mouseout);
     $("#map path").click(select);
+
     fillSelect("complaints-select",complaints);
     fillSelect("color-select",color_names);
+
     $("#color-map").click( function() {
-	changeComplaint($("#complaints-select").val(),zipList,colors[$("#color-select").val().toLowerCase()]);
+	data = changeComplaint($("#complaints-select").val(),zipList,colors[$("#color-select").val().toLowerCase()]);
     });
 });
 
@@ -56,10 +60,27 @@ function fillSelect(id,data) {
     }
 }
 
-function mousein() {
+function getCount(zip, data) {
+    for (var i = 0; i < data.zip.length; i++) {
+	if (data.zip[i] == zip) {
+	    return data.count[i];
+	}
+    }
+
+    return null;
+}
+
+function mousein(event) {
     if ($(this).css("fill") != "#333333") {
 	temp = $(this).css("fill");
 	$(this).css("fill","#666666");
+	$("#tooltip").css("display","inherit");
+	$('#tooltip').css({
+	    left: event.pageX,
+	    top: event.pageY
+	});
+	$("#tooltip-zip").text($(this).attr("id"));
+	$("#tooltip-complaints").text(getCount($(this).attr("id"),data));
     } else {
 	temp = "#333333";
     }
@@ -67,11 +88,14 @@ function mousein() {
 
 function mouseout() {
     $(this).css("fill",temp);
+    $("#tooltip").css("display","none");
 }
 
 function select() {
-    selected = $(this).attr("id");
-    $("#zip").text(selected);
+    if ($(this).css("fill") != "#333333") {
+	selected = $(this).attr("id");
+	$("#zip").text(selected);
+    }
 }
 
 // this is a bit of a mess, but it sort of works
@@ -115,8 +139,9 @@ function changeComplaint(complaint, zips, colors) {
         //if (document.getElementById(zipCount.zip[j]))
         //    console.log(JSON.stringify(zipCount.zip[j]));
         //console.log(JSON.stringify(quantize(zipCount.count[j])));
+	console.log(j,zipCount.zip[j],zipCount.count[j],quantize(zipCount.count[j]));
         colorZip(zipCount.zip[j], colors[quantize(zipCount.count[j])]);
     }
 
-
+    return zipCount;
 }
