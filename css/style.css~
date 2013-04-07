@@ -1,0 +1,24 @@
+p {
+  color: black;
+}
+
+#json-zip-complaint {
+    display:none;
+ }
+ 
+#json-complaint {
+    display:none;
+ }
+ 
+ #json-zips {
+     display:none;
+ }
+
+body {
+  background: #222222;
+}
+
+path {
+  stroke: #999999;
+  fill: #555555;
+}
