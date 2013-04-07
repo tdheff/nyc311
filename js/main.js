@@ -1,9 +1,11 @@
 var colors = {
     blue: ["#FFFFD9", "#EDF8B1", "#C7E9B4", "#7FCDBB", "#41B6C4", "#1D91C0", "#225EA8", "#253494", "#081D58"],
-    purple: ["#FFF7F3", "#FDE0DD", "#FCC5C0", "#FA9FB5", "#F768A1", "#DD3497", "#AE017E", "#7A0177", "#49006A"]
+    purple: ["#FFF7F3", "#FDE0DD", "#FCC5C0", "#FA9FB5", "#F768A1", "#DD3497", "#AE017E", "#7A0177", "#49006A"],
+    green: ["#FFFFE5", "#F7FCB9", "#D9F0A3", "#ADDD8E", "#78C679", "#41AB5D", "#238443", "#006837", "#004529"],
+    red: ["#FFFFCC", "#FFEDA0", "#FED976", "#FEB34C", "#FD8D3C", "#FC4E2A", "#E31A1C", "#BD0026", "#800026"]
 }
 
-var color_names = ["Blue","Purple"];
+var color_names = ["Blue","Purple","Green","Red"];
 
 var complaints = ["Broken Elevator",
 "Congestion/Gridlock",
@@ -34,7 +36,7 @@ var selected = null;
 
 $(document).ready(function() {
     var zipList = document.getElementById("json-zips").value;
-    changeComplaint("Taxi Driver Complaint", zipList, colors.blue);
+    changeComplaint("Broken Elevator", zipList, colors.blue);
     $("#map path").hover(mousein,mouseout);
     $("#map path").click(select);
     fillSelect("complaints-select",complaints);
