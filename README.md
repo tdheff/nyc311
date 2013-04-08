@@ -8,7 +8,7 @@ To run our code, simply open index.html. Once open, the onscreen instructions sh
 # Code breakdown:
 #
 
-The bulk of the work is done in main.js. The onload function sets up some basic stuff, populates a few elements, and colors the map. The bulk of the work is done by two functions:
+Most of the work is done in main.js. The onload function sets up some basic stuff, populates a few elements, and colors the map. The bulk of the work is done by two functions:
 
 * **barchart:** This function takes a zip code name, a string of complaints data in json format, and a color scheme, and plots a bar chart with a breakdown of complaints for that zipcode in the left sidebar.
 * **changeComplaint:** This function takes a complaint, a list of zipcodes, and a color scheme, and colors the map appropriately. It will also color a few other elements, such as the bar chart. This is purely asthetic.
