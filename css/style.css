@@ -59,11 +59,11 @@ body {
 
 #topbar {
     background: #222222;
-    height: 60px;
+    height: 54px;
     color: #DD3497;
     font-size: 1.8em;
     font-weight: bold;
-    padding: 10px;
+    padding: 13px;
 }
 
 #sidebar {
