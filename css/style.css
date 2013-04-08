@@ -69,7 +69,7 @@ body {
 #sidebar {
     height: 1000px;
     float: left;
-    width: 300px;
+    width: 400px;
     background: #333333;
     padding: 20px;
     color: #eeeeee;
@@ -133,4 +133,42 @@ path {
 
 #tooltip-zip {
     font-weight: bold;
+}
+
+.bar-container {
+    width: 400px;
+}
+
+.bar-container div {
+    display: inline-block;
+    font-size: 0.7em;
+    margin-bottom: 2px;
+}
+
+div.label {
+    width: 165px;
+    text-align: right;
+    margin-right: 3px;
+}
+
+div.bar {
+    color: #00ff00;
+    background: #ff0000;
+    border: solid 1px #eeeeee;
+    padding: 2px;
+}
+
+#divider {
+    border-bottom: solid 1px #666666;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#zip {
+    display: inline-block;
+    width: 400px;
+    text-align: center;
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
