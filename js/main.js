@@ -169,11 +169,11 @@ function changeComplaint(complaint, zips, colors) {
         count: []
     };
 
-    var zipComplaint = document.getElementById("json-zip-complaint").value;
+    var zipComplaint = $("#json-zip-complaint").val();
 
     for (var i = 0; i < zips.length; i++)
     {
-        if (document.getElementById(zips[i]))
+        if ($("#"+zips[i]))
         {
             var zipAccess = zips[i]+" "+complaint;
             var jszipComplaint = JSON.parse(zipComplaint);
