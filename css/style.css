@@ -59,7 +59,7 @@ body {
 
 #topbar {
     background: #222222;
-    height: 30px;
+    height: 60px;
     color: #DD3497;
     font-size: 1.8em;
     font-weight: bold;
@@ -154,7 +154,7 @@ div.label {
 div.bar {
     color: #00ff00;
     background: #ff0000;
-    border: solid 1px #eeeeee;
+    /*border: solid 1px #eeeeee;*/
     padding: 2px;
 }
 
@@ -168,7 +168,29 @@ div.bar {
     display: inline-block;
     width: 400px;
     text-align: center;
-    font-size: 1.4em;
+    font-size: 1.0em;
     font-weight: bold;
     margin-bottom: 10px;
+}
+
+#subhead {
+    font-size: 0.8em;
+}
+
+#map-options {
+    position: absolute;
+    left: 460px;
+    top: 99px;
+    color: #eeeeee;
+    font-weight: bold;
+}
+
+#map-options p {
+    color: #eeeeee;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+    
+.info {
+    font-size: 0.8em;
 }

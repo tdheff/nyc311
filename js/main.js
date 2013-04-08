@@ -14,12 +14,10 @@ var complaints = ["Broken Elevator",
                   "Double Parked Blocking Vehicle",
                   "Fallen Tree",
                   "Fire Hydrant Emergency (FHE)",
-                  "Food Stamp",
                   "Graffiti",
                   "Heating",
                   "Loud Music/Party",
                   "Loud Talking",
-                  "Medicaid",
                   "Missed Garbage Collection",
                   "Munimeter Issue",
                   "Noise, Ice Cream Truck",
@@ -96,7 +94,7 @@ function mouseout() {
 function select() {
     if ($(this).css("fill") != "#333333") {
         selected = $(this).attr("id");
-        $("#zip").text(selected);
+        $("#zip").text("Complaints in "+selected);
     }
     
     barchart($(this).attr("id"),$("#json-zip-complaint").val(),active_colors);
@@ -121,14 +119,13 @@ function barchart(zip, complaints, colors) {
     }
     $(".bar").css("background", active_colors[4]);
     $(".bar").css("border-color", active_colors[0]);
-    $(".bar").css("color", active_colors[8]);
+    $(".bar").css("color", "white");
     $(".bar").css("width", function () {
 	var num = parseInt($(this).text());
 	return Math.floor(200*num/max) + "px"
     });
 }
 
-// this is a bit of a mess, but it sort of works
 function changeComplaint(complaint, zips, colors) {
     active_colors = colors;
 
@@ -163,9 +160,10 @@ function changeComplaint(complaint, zips, colors) {
         .range(d3.range(9));
 
     $("#topbar h1").css("color", colors[4]);
+    $("#subhead").css("color", colors[2]);
     $(".bar").css("background", active_colors[4]);
     $(".bar").css("border-color", active_colors[0]);
-    $(".bar").css("color", active_colors[8]);
+    $(".bar").css("color", "white");
     for (var j = 0; j < zipCount.zip.length; j++)
     {
         //console.log(JSON.stringify(zipCount.count[j]));

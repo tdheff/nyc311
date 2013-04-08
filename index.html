@@ -18,21 +18,24 @@
     <div id="tooltip">
       <p id="tooltip-zip">10507</p>
       <div id="tooltip-data">
-	<p>Complaints: </p><p id="tooltip-complaints"></p>
+	<p id="tooltip-label">Complaints: </p><p id="tooltip-complaints"></p>
       </div>
     </div>
 
     <div id="topbar">
       <h1>NYC 311</h1>
+      <p id="subhead">Visualizing a selection of complaints made to NYC's 311 hotline in 2012.</p>
     </div>
-
-    <div id="sidebar">
-      <select id="complaints-select"></select>
+    <div id="map-options">
+      <p>Currently showing...</p>
+      <select id="complaints-select"></select> in
       <select id="color-select"></select>
-      <button id="color-map">Go</button>
-      <div id="divider"></div>
-      <div id="zip"> Click on a zip code! </div>
-      <div id="graph"></div>
+      <button id="color-map">Map</button>
+    </div>
+    <div id="sidebar">
+      <!--<div id="divider"></div>-->
+      <div id="zip"> Click on a zip code for more information.</div>
+      <div id="graph"><br/><br /><p class="info">New York City's 311 phone number was introduced by Mayor Michael Bloomberg in 2003 to consolidate 11-pages of government phone numbers into just one number. In the 21 complaint categories shown here, New Yorkers made 537,247 calls to 311 in 2012, representing a third of all the complaints lodged with 311 in 2012.</p><br /><p class="info">The 311 call data is from NYC.gov's Open Data Initiative. Complaints are a selection of notable complaint categories. Data span calendar year 2012.  Map from VisionNYC Project. By Tommy Heffernan and Jonathan Yip.</p></div>
     </div>
 
     <div id="map"><?xml version="1.0" encoding="UTF-8" standalone="no"?>

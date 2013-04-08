@@ -15,4 +15,4 @@ with open('311calls.csv') as input_file:
         
 #print complaints.most_common()
 
-print json.dumps(zips)
+print json.dumps(zipcodes)
