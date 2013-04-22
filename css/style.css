@@ -104,6 +104,10 @@ option {
     display:none;
 }
 
+#json-demographics {
+    display:none;
+}
+
 #json-zips {
      display:none;
  }
