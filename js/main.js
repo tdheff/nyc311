@@ -254,7 +254,7 @@ function d3selectComplaint(c) {
         .domain([0, maxComplaint])
         .range(d3.range(9));
 
-    var throwaway = d3.selectAll('path').attr('fill',function(q){
+    var throwaway = d3.selectAll('path').transition().attr('fill',function(q){
 
 	var z = this.id;
 	
