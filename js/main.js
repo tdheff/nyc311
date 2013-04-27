@@ -32,19 +32,26 @@ var complaints = ["Broken Elevator",
                   "Vermin"]
 
 // color scale in use
-var active_colors= null;
+var active_colors = colors["blue"];
 // temporary variable used for hover effect
 var temp = null;
 // name of selected zip code
 var selected = null;
 // current complaint data
 var data = null;
+// preprocessed data
+var d = null;
+// active complaint
+var active_complaint = "Broken Elevator";
 
 $(document).ready(function() {
     // read in names of zip codes
     var zipList = $("#json-zips").val();
     // set mapped complaint to Broken Elevator (the default one in the selection)
-    data = changeComplaint("Broken Elevator", zipList, colors.blue);
+    //data = changeComplaint("Broken Elevator", zipList, colors.blue);
+
+    d = preprocess();
+    data = d3selectComplaint("Broken Elevator");
 
     // map hover and click callbacks
     $("#map path").hoverIntent(mousein,mouseout);
@@ -56,7 +63,8 @@ $(document).ready(function() {
 
     // map button callback
     $("#color-map").click( function() {
-        data = changeComplaint($("#complaints-select").val(),zipList,colors[$("#color-select").val().toLowerCase()]);
+	active_colors = colors[$("#color-select").val().toLowerCase()];
+	data = data = d3selectComplaint($("#complaints-select").val());
     });
 });
 
@@ -96,7 +104,7 @@ function mousein(event) {
             top: event.pageY
         });
         $("#tooltip-zip").text($(this).attr("id"));
-        $("#tooltip-complaints").text(getCount($(this).attr("id"),data));
+        $("#tooltip-complaints").text(d[$(this).attr("id")][active_complaint]);
     } else {
         temp = "#333333";
     }
@@ -209,4 +217,56 @@ function changeComplaint(complaint, zips, colors) {
     }
 
     return zipCount;
+}
+
+function preprocess() {
+    var finalData = {};
+
+    var zipData = JSON.parse($("#json-zip-complaint").val());
+    var zipList = JSON.parse($("#json-zips").val());
+    for (z in zipList)
+    {
+	finalData[zipList[z]] = {};
+	for (c in complaints) {
+	    finalData[zipList[z]][complaints[c]] = zipData[zipList[z] + " " + complaints[c]];
+	}
+    }
+
+    return finalData;
+}
+
+function maxInObject(obj,attr) {
+    var max = null;
+    for (o in obj) {
+	if (obj[o][attr] > max || max == null) {
+	    max = obj[o][attr];
+	}
+    }
+    return max;
+}
+
+function d3selectComplaint(c) {
+    active_complaint = c;
+
+    var maxComplaint = maxInObject(d,c);
+
+    var quantize = d3.scale.quantize()
+        .domain([0, maxComplaint])
+        .range(d3.range(9));
+
+    var throwaway = d3.selectAll('path').attr('fill',function(q){
+
+	var z = this.id;
+	
+	if (d[z] != undefined) {
+	    if (d[z][c] != undefined) {
+		return active_colors[quantize(d[z][c])];
+	    } else {
+		return "#333333";
+	    }
+	}
+	
+    });
+    
+    return throwaway;
 }

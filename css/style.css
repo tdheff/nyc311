@@ -59,7 +59,7 @@ body {
 
 #topbar {
     background: #222222;
-    height: 54px;
+    height: 100%;
     color: #DD3497;
     font-size: 1.8em;
     font-weight: bold;
@@ -67,9 +67,6 @@ body {
 }
 
 #sidebar {
-    height: 1000px;
-    float: left;
-    width: 400px;
     background: #333333;
     padding: 20px;
     color: #eeeeee;
@@ -93,7 +90,6 @@ option {
 }
 
 #map {
-    float: left;
 }
 
 #json-zip-complaint {
@@ -114,7 +110,7 @@ option {
 
 path {
     stroke: #111111;
-    fill: #333333;
+    /*fill: #333333;*/
 }
 
 #tooltip {
