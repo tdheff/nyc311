@@ -53,40 +53,42 @@ table {
 body {
     padding: none;
     margin: none;
-    font-family: Sans-Serif;
-    background: #111111;
+    font-family: Verdana;
+    background: #ffffff;
 }
 
 #topbar {
-    background: #222222;
+    background: #ffffff;
+    border-bottom: solid 1px #dddddd;
     height: 100%;
-    color: #DD3497;
+    /*color: #DD3497;*/
     font-size: 1.8em;
-    font-weight: bold;
+    /*font-weight: bold;*/
     padding: 13px;
 }
 
 #sidebar {
-    background: #333333;
+    background: #ffffff;
     padding: 20px;
-    color: #eeeeee;
+    color: #555555;
+    border-top: solid 1px #dddddd;
 }
 
 select {
-    background: #222222;
-    border: solid 1px #eeeeee;
-    color: #eeeeee;
+    background: #eeeeee;
+    border: solid 1px #dddddd;
+    color: #555555;
 }
 
 button {
-    background: #222222;
-    border: solid 1px #eeeeee;
-    color: #eeeeee;
+    background: #eeeeee;
+    border: solid 1px #dddddd;
+    color: #555555;
 }
 
 option {
-    background: #222222;
-    color: #eeeeee;
+    background: #eeeeee;
+    color: #555555;
 }
 
 #map {
@@ -109,7 +111,7 @@ option {
  }
 
 path {
-    stroke: #111111;
+    stroke: #aaaaaa;
     /*fill: #333333;*/
 }
 
@@ -154,7 +156,6 @@ div.label {
 div.bar {
     color: #00ff00;
     background: #ff0000;
-    /*border: solid 1px #eeeeee;*/
     padding: 2px;
 }
 
@@ -169,7 +170,7 @@ div.bar {
     width: 400px;
     text-align: center;
     font-size: 1.0em;
-    font-weight: bold;
+    /*font-weight: bold;*/
     margin-bottom: 10px;
 }
 
@@ -179,16 +180,16 @@ div.bar {
 
 #map-options {
     position: absolute;
-    left: 460px;
+    left: 40px;
     top: 99px;
-    color: #eeeeee;
-    font-weight: bold;
+    color: #555555;
+    /* font-weight: bold; */
 }
 
 #map-options p {
-    color: #eeeeee;
+    color: #555555;
     margin-bottom: 8px;
-    font-weight: bold;
+    /* font-weight: bold; */
 }
     
 .info {

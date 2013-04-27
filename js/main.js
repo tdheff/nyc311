@@ -9,27 +9,7 @@ var colors = {
 var color_names = ["Blue","Purple","Green","Red"];
 
 // names of complaints
-var complaints = ["Broken Elevator",
-                  "Congestion/Gridlock",
-                  "Dead Animals",
-                  "Derelict Vehicle",
-                  "Double Parked Blocking Vehicle",
-                  "Fallen Tree",
-                  "Fire Hydrant Emergency (FHE)",
-                  "Graffiti",
-                  "Heating",
-                  "Loud Music/Party",
-                  "Loud Talking",
-                  "Missed Garbage Collection",
-                  "Munimeter Issue",
-                  "Noise, Ice Cream Truck",
-                  "Posted Parking Sign Violation",
-                  "Pothole",
-                  "Rat Sighting",
-                  "Sewer Backup",
-                  "Street Light Out",
-                  "Taxi Driver Complaint",
-                  "Vermin"]
+var complaints = ["Fire Hydrant Emergency (FHE)", "Lead", "Rough Pitted or Cracked Roads", "Rat Sighting", "Missed Garbage Collection", "Loud Music/Party", "Pothole", "Asbestos", "School Maintenance", "Boilers", "Food Stamp Replacement Card", "Dirty Conditions", "Fallen Tree", "Medicaid Replacement Card", "Broken Elevator", "Posted Parking Sign Violation", "Loud Talking", "Dirty Water", "Heating", "Vacant Lot", "Plumbing", "Double Parked Blocking Vehicle", "Noise, Ice Cream Truck", "Homeless Encampment", "Congestion/Gridlock", "Taxi Driver Complaint", "Vermin", "Munimeter Issue", "Dead Animals", "Graffiti", "Street Light Out", "Derelict Vehicle", "Sewer Backup"]
 
 // color scale in use
 var active_colors = colors["blue"];
@@ -42,7 +22,7 @@ var data = null;
 // preprocessed data
 var d = null;
 // active complaint
-var active_complaint = "Broken Elevator";
+var active_complaint = complaints[0];
 
 $(document).ready(function() {
     // read in names of zip codes
@@ -51,7 +31,7 @@ $(document).ready(function() {
     //data = changeComplaint("Broken Elevator", zipList, colors.blue);
 
     d = preprocess();
-    data = d3selectComplaint("Broken Elevator");
+    data = d3selectComplaint(active_complaint);
 
     // map hover and click callbacks
     $("#map path").hoverIntent(mousein,mouseout);
@@ -61,10 +41,15 @@ $(document).ready(function() {
     fillSelect("complaints-select",complaints);
     fillSelect("color-select",color_names);
 
-    // map button callback
-    $("#color-map").click( function() {
+    // selection callbacks
+    $("#complaints-select").change(function () {
 	active_colors = colors[$("#color-select").val().toLowerCase()];
-	data = data = d3selectComplaint($("#complaints-select").val());
+	data = d3selectComplaint($("#complaints-select").val());
+    });
+
+    $("#color-select").change(function () {
+	active_colors = colors[$("#color-select").val().toLowerCase()];
+	data = d3selectComplaint($("#complaints-select").val());
     });
 });
 
@@ -95,7 +80,7 @@ function getCount(zip, data) {
 function mousein(event) {
     // change fill, store old fill in temp, bring up tooltip
     // if color is #333333 then zip has no relevant data, so do nothing
-    if ($(this).css("fill") != "#333333") {
+    if ($(this).css("fill") != "#eeeeee") {
         temp = $(this).css("fill");
         $(this).css("fill","#666666");
         $("#tooltip").css("display","inherit");
@@ -106,7 +91,7 @@ function mousein(event) {
         $("#tooltip-zip").text($(this).attr("id"));
         $("#tooltip-complaints").text(d[$(this).attr("id")][active_complaint]);
     } else {
-        temp = "#333333";
+        temp = "#eeeeee";
     }
 }
 
@@ -124,6 +109,16 @@ function select() {
         selected = $(this).attr("id");
         $("#zip").text("Complaints in "+selected);
     }
+}
+
+// draw bar chart using d3
+function d3barchart(zip) {
+    var w = 20, h = 80;
+    
+    var x = d3.scale.linear().domain([0,1]).range([0,w]);
+    var y = d3.scale.linear().domain([0, 100]).rangeRound([0, h]);
+
+    for (c in complaints) {}
 }
 
 // draw bar chart
@@ -262,11 +257,14 @@ function d3selectComplaint(c) {
 	    if (d[z][c] != undefined) {
 		return active_colors[quantize(d[z][c])];
 	    } else {
-		return "#333333";
+		return "#eeeeee";
 	    }
 	}
-	
+	return "#eeeeee";
     });
+
+    d3.select('h1').transition().style('color',active_colors[6]);
+    d3.select('#subhead').transition().style('color',active_colors[4]);
     
     return throwaway;
 }
