@@ -120,7 +120,7 @@ function select() {
 
 // draw bar chart using d3
 function d3barchart(zip) {
-    var w = 20, h = 80;
+    var w = 20, h = 100;
 
     var barArray = []
 
@@ -143,14 +143,14 @@ function d3barchart(zip) {
     var labels = barArray.map(function(o){return o.key});
 
     var max = d3.max(vals);
-    var y = d3.scale.linear().domain([0, max]).range([0,80]);
+    var y = d3.scale.linear().domain([0, max]).range([0,100]);
     var x = d3.scale.ordinal().domain(labels).rangePoints([0,labels.length-1]);
 
     if ($(".chart").length == 0) {
 	var chart = d3.select("#sidebar").append("svg")
 	    .attr("class","chart")
 	    .attr("height","200")
-	    .attr("width", 40*barArray.length);
+	    .attr("width", 40*barArray.length+100);
 
 	var node = chart.selectAll("g")
 	    .data(barArray,function(d) { return d.key; })
@@ -159,7 +159,7 @@ function d3barchart(zip) {
 
 	node.append("rect")
 	    .attr("fill",active_colors[6])
-	    .attr("x", function(d,i){console.log(d.key); return x(i)*40; })
+	    .attr("x", function(d,i){console.log(d.key); return x(i)*40+20; })
 	    .attr("height", function(d) {return y(d.value)})
 	    .attr("y", function(d) {return 100 - y(d.value)})
 	    .attr("width", 40);
@@ -167,36 +167,36 @@ function d3barchart(zip) {
 	node.append("text")
 	    .text(function(d) { return d.value; })
 	    .attr("fill",function(d) {
-		if (y(d.value) > 15) {
+		if (y(d.value) > 18) {
 		    return "#ffffff";
 		} else {
 		    return active_colors[6];
 		}
 	    })
 	    .attr("y", function(d) {
-		if (y(d.value) > 15) {
+		if (y(d.value) > 18) {
 		    return 113 - y(d.value);
 		} else {
 		    return 99 - y(d.value);
 		}
 	    })
 	    .attr("class", function(d) {
-		if (y(d.value) > 15) {
+		if (y(d.value) > 18) {
 		    return "value white";
 		} else {
 		    return "value color";
 		}
 	    })
-	    .attr("x", function(d,i){return x(i)*40+4});
+	    .attr("x", function(d,i){return x(i)*40+24});
 
 	node.append("text")
 	    .text(function(d) { return d.key; })
 	    .attr("class","label")
 	    .attr("y", 105)
-	    .attr("x", function(d,i){return x(i)*40+15})
+	    .attr("x", function(d,i){return x(i)*40+35})
 	    .attr("transform", function(d,i){
 		var str = "rotate(90 ";
-		str = str + String(x(i)*40+15);
+		str = str + String(x(i)*40+35);
 		str = str + ",105)";
 		return str;
 	    });
@@ -213,7 +213,7 @@ function d3barchart(zip) {
 	    .transition()
 	    .duration(1000)
 	    .attr("fill",active_colors[6])
-	    .attr("x", function(d,i){ return x(d.key)*40; })
+	    .attr("x", function(d,i){ return x(d.key)*40+20; })
 	    .attr("height", function(d) { return y(d.value) })
 	    .attr("y", function(d) {return 100 - y(d.value)});
 
@@ -223,36 +223,36 @@ function d3barchart(zip) {
 	    .duration(1000)
 	    .text(function (d) {console.log(d.value); return d.value; })
 	    .attr("fill",function(d) {
-		if (y(d.value) > 15) {
+		if (y(d.value) > 18) {
 		    return "#ffffff";
 		} else {
 		    return active_colors[6];
 		}
 	    })
 	    .attr("y", function(d) {
-		if (y(d.value) > 15) {
+		if (y(d.value) > 18) {
 		    return 113 - y(d.value);
 		} else {
 		    return 99 - y(d.value);
 		}
 	    })
 	    .attr("class", function(d) {
-		if (y(d.value) > 15) {
+		if (y(d.value) > 18) {
 		    return "value white";
 		} else {
 		    return "value color";
 		}
 	    })
-	    .attr("x", function(d,i){ return x(d.key)*40+4; });
+	    .attr("x", function(d,i){ return x(d.key)*40+24; });
 
 	node.selectAll(".label")
 	    .data(barArray,function(d) { return d.key; })
 	    .transition()
 	    .duration(1000)
-	    .attr("x", function(d,i){return x(d.key)*40+15})
+	    .attr("x", function(d,i){return x(d.key)*40+35})
 	    .attr("transform", function(d,i){
 		var str = "rotate(90 ";
-		str = str + String(x(d.key)*40+15);
+		str = str + String(x(d.key)*40+35);
 		str = str + ",105)";
 		return str;
 	    });
