@@ -14,8 +14,6 @@ var complaints = ["Fire Hydrant Emergency (FHE)", "Lead", "Rough Pitted or Crack
 
 // color scale in use
 var active_colors = colors["blue"];
-// temporary variable used for hover effect
-var temp = null;
 // name of selected zip code
 var selected = null;
 // current complaint data
@@ -24,6 +22,8 @@ var data = null;
 var d = null;
 // active complaint
 var active_complaint = complaints[0];
+// is the barchart there?
+var hasChart = false;
 
 $(document).ready(function() {
     // read in names of zip codes
@@ -91,15 +91,13 @@ function mousein(event) {
         });
         $("#tooltip-zip").text($(this).attr("id"));
         $("#tooltip-complaints").text(d[$(this).attr("id")][active_complaint]);
-    } else {
-        temp = "#eeeeee";
     }
 }
 
 // what to do when mouse leaves
 function mouseout() {
     // recolor zip code, hide tooltip
-    $(this).css("fill",temp);
+    $(this).removeAttr('style');
     $("#tooltip").css("display","none");
 }
 
@@ -111,9 +109,13 @@ function select() {
     //    $("#zip").text("Complaints in "+selected);
     //}
     
-    $(".info").css("display","none");
+    $("#zip").fadeOut();
+    $("#graph").fadeOut();
     d3barchart($(this).attr("id"));
-    $(".chart rect").css("fill",active_colors[6]);
+    if (!hasChart) {
+	$(".chart").css("display","none").delay(450).fadeIn();
+	hasChart = true;
+    }
 }
 
 // draw bar chart using d3
@@ -156,6 +158,7 @@ function d3barchart(zip) {
 	    .append("g");
 
 	node.append("rect")
+	    .attr("fill",active_colors[6])
 	    .attr("x", function(d,i){console.log(d.key); return x(i)*40; })
 	    .attr("height", function(d) {return y(d.value)})
 	    .attr("y", function(d) {return 100 - y(d.value)})
@@ -163,7 +166,6 @@ function d3barchart(zip) {
 	
 	node.append("text")
 	    .text(function(d) { return d.value; })
-	    .attr("class","value")
 	    .attr("fill",function(d) {
 		if (y(d.value) > 15) {
 		    return "#ffffff";
@@ -176,6 +178,13 @@ function d3barchart(zip) {
 		    return 113 - y(d.value);
 		} else {
 		    return 99 - y(d.value);
+		}
+	    })
+	    .attr("class", function(d) {
+		if (y(d.value) > 15) {
+		    return "value white";
+		} else {
+		    return "value color";
 		}
 	    })
 	    .attr("x", function(d,i){return x(i)*40+4});
@@ -203,7 +212,8 @@ function d3barchart(zip) {
 	    .data(barArray,function(d) { return d.key; })
 	    .transition()
 	    .duration(1000)
-	    .attr("x", function(d,i){console.log(i);return x(d.key)*40; })
+	    .attr("fill",active_colors[6])
+	    .attr("x", function(d,i){ return x(d.key)*40; })
 	    .attr("height", function(d) { return y(d.value) })
 	    .attr("y", function(d) {return 100 - y(d.value)});
 
@@ -226,7 +236,14 @@ function d3barchart(zip) {
 		    return 99 - y(d.value);
 		}
 	    })
-	    .attr("x", function(d,i){return x(d.key)*40+4});
+	    .attr("class", function(d) {
+		if (y(d.value) > 15) {
+		    return "value white";
+		} else {
+		    return "value color";
+		}
+	    })
+	    .attr("x", function(d,i){ return x(d.key)*40+4; });
 
 	node.selectAll(".label")
 	    .data(barArray,function(d) { return d.key; })
@@ -386,6 +403,14 @@ function d3selectComplaint(c) {
 
     d3.select('h1').transition().style('color',active_colors[6]);
     d3.select('#subhead').transition().style('color',active_colors[4]);
+    d3.select('#sidebar')
+	.selectAll('rect')
+	.transition()
+	.attr('fill',active_colors[4]);
+    d3.select('#sidebar')
+	.selectAll('.color')
+	.transition()
+	.attr('fill',active_colors[4]);
     
     return throwaway;
 }
