@@ -75,13 +75,14 @@ body {
 }
 
 select {
-    background: #eeeeee;
+    background: #ffffff;
     border: solid 1px #dddddd;
     color: #555555;
+    font-size: 1.0em;
 }
 
 button {
-    background: #eeeeee;
+    background: #ffffff;
     border: solid 1px #dddddd;
     color: #555555;
 }
@@ -193,5 +194,14 @@ div.bar {
 }
     
 .info {
+    font-size: 0.8em;
+}
+
+.chart rect {
+    stroke: #ffffff;
+    color: #000000;
+}
+
+.chart text {
     font-size: 0.8em;
 }
