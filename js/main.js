@@ -10,10 +10,10 @@ var colors = {
 var color_names = ["blue","purple","green","red", "grey"];
 
 // names of complaints
-var complaints = ["Fire Hydrant Emergency (FHE)", "Lead", "Rough Pitted or Cracked Roads", "Rat Sighting", "Missed Garbage Collection", "Loud Music/Party", "Pothole", "Asbestos", "School Maintenance", "Boilers", "Food Stamp Replacement Card", "Dirty Conditions", "Fallen Tree", "Medicaid Replacement Card", "Broken Elevator", "Posted Parking Sign Violation", "Loud Talking", "Dirty Water", "Heating", "Vacant Lot", "Plumbing", "Double Parked Blocking Vehicle", "Noise, Ice Cream Truck", "Homeless Encampment", "Congestion/Gridlock", "Taxi Driver Complaint", "Vermin", "Munimeter Issue", "Dead Animals", "Graffiti", "Street Light Out", "Derelict Vehicle", "Sewer Backup"]
+var complaints = ["Fire Hydrant Emergency (FHE)", "Lead", "Rough Pitted or Cracked Roads", "Rat Sighting", "Missed Garbage Collection", "Loud Music/Party", "Pothole", "Asbestos", "School Maintenance", "Boilers", "Dirty Conditions", "Fallen Tree", "Broken Elevator", "Posted Parking Sign Violation", "Loud Talking", "Dirty Water", "Heating", "Vacant Lot", "Plumbing", "Double Parked Blocking Vehicle", "Noise, Ice Cream Truck", "Homeless Encampment", "Congestion/Gridlock", "Taxi Driver Complaint", "Vermin", "Munimeter Issue", "Dead Animals", "Graffiti", "Street Light Out", "Derelict Vehicle", "Sewer Backup"]
 
 // names of demographic categories
-var demographics = ["Total Population","Median Age","Percent White","Percent Black","Percent Hispanic","Median Income","Mean Income"]
+var demographics = ["Median Income","Mean Income","Total Population","Median Age","Percent White","Percent Black","Percent Hispanic"]
 
 // color scale in use
 var active_colors = colors["blue"];
@@ -145,13 +145,14 @@ function select() {
 
 // initialize scatterplot
 function drawScatter(comp,dem) {
-    var w = 600, h = 600;
+    var w = 600, h = 600, pad = 40;
     
     var sData = [];
     
     for (z in pdata) {
 	if (pdata[z][comp] != undefined 
 	    && pdata[z][dem] != undefined
+	    && !isNaN(pdata[z][dem])
 	    && $("#" + z).length != 0) {
 	    sData.push({
 		x: pdata[z][dem],
@@ -159,18 +160,40 @@ function drawScatter(comp,dem) {
 		zip: z});
 	}
     }
+
+    console.log(sData);
     
-    var max = d3.max(sData,function(o){return o.x});
-    var min = d3.min(sData,function(o){return o.x});
+    var xmax = d3.max(sData,function(o){return o.x});
+    var xmin = d3.min(sData,function(o){return o.x});
+    var xbar = d3.mean(sData,function(o){return o.x});
+    var xr = sData.map(function(o){return xbar - o.x});
+    var xrs = xr.map(function(n){return n*n;});
     var x = d3.scale.linear()
-	.domain([min,max])
+	.domain([xmin,xmax])
 	.range([40,w-40]);
 
-    var max = d3.max(sData,function(o){return o.y});
-    var min = d3.min(sData,function(o){return o.y});
+    var ymax = d3.max(sData,function(o){return o.y});
+    var ymin = d3.min(sData,function(o){return o.y});
+    var ybar = d3.mean(sData,function(o){return o.y});
+    var yr = sData.map(function(o){return ybar - o.y});
+    var xryr = []
+    for (var i = 0; i < xr.length; i++) {
+	xryr.push(yr[i]*xr[i])
+    }
     var y = d3.scale.linear()
-	.domain([0,max])
-	.range([h-40,40]);
+	.domain([0,ymax])
+	.range([h-pad,pad]);
+
+    var b1 = d3.sum(xryr)/d3.sum(xrs);
+    var b0 = ybar - xbar*b1;
+
+    var xinterceptx = -b0/b1;
+    var xintercepty = 0;
+    if (xinterceptx > xmax) {
+	xintercepty = 0;
+	xinterceptx = xmax;
+	
+    }
     
     if ($(".scatter").length == 0) {
 	var scatter = d3.select("#map").append("svg")
@@ -190,7 +213,7 @@ function drawScatter(comp,dem) {
 	scatter.append("g")
 	    .attr("class","axis")
 	    .attr("id","x-axis")
-	    .attr("transform","translate(0," + (h-40) + ")")
+	    .attr("transform","translate(0," + (h-pad) + ")")
 	    .call(d3.svg.axis()
 		  .scale(x)
 		  .orient("bottom")
@@ -198,11 +221,29 @@ function drawScatter(comp,dem) {
 	scatter.append("g")
 	    .attr("class","axis")
 	    .attr("id","y-axis")
-	    .attr("transform","translate("+40+",0)")
+	    .attr("transform","translate("+pad+",0)")
 	    .call(d3.svg.axis()
 		  .scale(y)
 		  .orient("left")
 		  .ticks(7));
+
+	scatter.append("g")
+	    .attr("clip-path","url(#clipmask)")
+	    .append("line")
+	    .attr("x1",x(xmin))
+	    .attr("y1",y(b0))
+	    .attr("x2",x(xmax))
+	    .attr("y2",y(b0+b1*(xmax-xmin)))
+	    .attr("stroke",active_colors[2])
+	    .attr("id","trendline");
+
+	scatter.append("defs").append("clipPath")
+	    .attr("id","clipmask")
+	    .append("rect")
+	    .attr("x",0+pad)
+	    .attr("y",0+pad)
+	    .attr("height",600-2*pad)
+	    .attr("width",600-2*pad);
     } else {
 	var scatter = d3.select(".scatter")
 	var circles = scatter.selectAll("circle")
@@ -237,6 +278,14 @@ function drawScatter(comp,dem) {
 		  .scale(y)
 		  .orient("left")
 		  .ticks(7));
+
+	scatter.select("#trendline")
+	    .transition()
+	    .duration(1000)
+	    .attr("x1",x(xmin))
+	    .attr("y1",y(b0))
+	    .attr("x2",x(xmax))
+	    .attr("y2",y(b0+b1*(xmax-xmin)))
     }
 }
 
@@ -542,6 +591,9 @@ function d3selectComplaint(c) {
     d3.selectAll('circle')
 	.transition()
 	.attr('fill',active_colors[4]);
+    d3.select('#trendline')
+	.transition()
+	.attr('stroke',active_colors[2]);
     
     return throwaway;
 }

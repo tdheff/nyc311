@@ -218,5 +218,9 @@ div.bar {
 #dem-select {
     position: absolute;
     top: 635px;
-    right: 50px;
+    right: 30px;
+}
+
+line {
+    stroke-width: 2px;
 }
