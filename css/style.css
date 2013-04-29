@@ -113,15 +113,14 @@ option {
 
 path {
     stroke: #aaaaaa;
-    /*fill: #333333;*/
+    /* fill: #333333; */
 }
 
 #tooltip {
-    height: 28px;
-    background: #333333;
+    background: #ffffff;
     position: absolute;
-    border: solid 1px #eeeeee;
-    color: #eeeeee;
+    border: solid 1px #555555;
+    color: #555555;
     padding: 5px;
     display: none;
 }
@@ -203,4 +202,21 @@ div.bar {
 
 .chart text {
     font-size: 0.8em;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #555555;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-size: 11px;
+}
+
+#dem-select {
+    position: absolute;
+    top: 635px;
+    right: 50px;
 }

@@ -12,6 +12,9 @@ var color_names = ["blue","purple","green","red", "grey"];
 // names of complaints
 var complaints = ["Fire Hydrant Emergency (FHE)", "Lead", "Rough Pitted or Cracked Roads", "Rat Sighting", "Missed Garbage Collection", "Loud Music/Party", "Pothole", "Asbestos", "School Maintenance", "Boilers", "Food Stamp Replacement Card", "Dirty Conditions", "Fallen Tree", "Medicaid Replacement Card", "Broken Elevator", "Posted Parking Sign Violation", "Loud Talking", "Dirty Water", "Heating", "Vacant Lot", "Plumbing", "Double Parked Blocking Vehicle", "Noise, Ice Cream Truck", "Homeless Encampment", "Congestion/Gridlock", "Taxi Driver Complaint", "Vermin", "Munimeter Issue", "Dead Animals", "Graffiti", "Street Light Out", "Derelict Vehicle", "Sewer Backup"]
 
+// names of demographic categories
+var demographics = ["Total Population","Median Age","Percent White","Percent Black","Percent Hispanic","Median Income","Mean Income"]
+
 // color scale in use
 var active_colors = colors["blue"];
 // name of selected zip code
@@ -19,9 +22,11 @@ var selected = null;
 // current complaint data
 var data = null;
 // preprocessed data
-var d = null;
+var pdata = null;
 // active complaint
 var active_complaint = complaints[0];
+// active demographic category
+var active_dem = demographics[0];
 // is the barchart there?
 var hasChart = false;
 
@@ -31,21 +36,30 @@ $(document).ready(function() {
     // set mapped complaint to Broken Elevator (the default one in the selection)
     //data = changeComplaint("Broken Elevator", zipList, colors.blue);
 
-    d = preprocess();
+    pdata = preprocess();
     data = d3selectComplaint(active_complaint);
+    drawScatter(active_complaint,active_dem);
 
     // map hover and click callbacks
-    $("#map path").hoverIntent(mousein,mouseout);
-    $("#map path").click(select);
+    $("#svg2 path").hoverIntent(mousein,mouseout);
+    $("#svg2 path").click(select);
 
     // populate selection menus
     fillSelect("complaints-select",complaints);
     fillSelect("color-select",color_names);
+    fillSelect("dem-select",demographics);
 
     // selection callbacks
     $("#complaints-select").change(function () {
 	active_colors = colors[$("#color-select").val().toLowerCase()];
 	data = d3selectComplaint($("#complaints-select").val());
+	active_complaint = $("#complaints-select").val();
+	drawScatter(active_complaint,active_dem);
+    });
+
+     $("#dem-select").change(function () {
+	active_dem = $("#dem-select").val();
+	drawScatter(active_complaint,active_dem);
     });
 
     $("#color-select").change(function () {
@@ -84,13 +98,23 @@ function mousein(event) {
     if ($(this).css("fill") != "#eeeeee") {
         temp = $(this).css("fill");
         $(this).css("fill","#666666");
-        $("#tooltip").css("display","inherit");
+        $("#tooltip").fadeIn(150);
         $('#tooltip').css({
             left: event.pageX,
             top: event.pageY
         });
         $("#tooltip-zip").text($(this).attr("id"));
-        $("#tooltip-complaints").text(d[$(this).attr("id")][active_complaint]);
+        $("#tooltip-complaints").text(pdata[$(this).attr("id")][active_complaint]);
+	$(".tooltip-dem-label").remove();
+	$(".tooltip-dem").remove();
+	$("br").remove();
+	for (d in demographics) {
+	    $("#tooltip-data").append(
+		"<br><p class='tooltip-dem-label'>" + demographics[d] + ": </p>" +
+		    "<p class='tooltip-dem'>" +
+		    pdata[$(this).attr("id")][demographics[d]] +
+		    "</p")
+	}
     }
 }
 
@@ -98,7 +122,8 @@ function mousein(event) {
 function mouseout() {
     // recolor zip code, hide tooltip
     $(this).removeAttr('style');
-    $("#tooltip").css("display","none");
+    //$("#tooltip").css("display","none");
+    $("#tooltip").fadeOut(150);
 }
 
 // what to do when zip is clicked on
@@ -118,17 +143,96 @@ function select() {
     }
 }
 
+// initialize scatterplot
+function drawScatter(comp,dem) {
+    var w = 600, h = 600;
+    
+    var sData = [];
+    
+    for (z in pdata) {
+	if (pdata[z][comp] != undefined 
+	    && pdata[z][dem] != undefined
+	    && $("#" + z).length != 0) {
+	    sData.push({
+		x: pdata[z][dem],
+		y: pdata[z][comp],
+		zip: z});
+	}
+    }
+    
+    var max = d3.max(sData,function(o){return o.x});
+    var min = d3.min(sData,function(o){return o.x});
+    var x = d3.scale.linear()
+	.domain([min,max])
+	.range([40,w-40]);
+
+    var max = d3.max(sData,function(o){return o.y});
+    var min = d3.min(sData,function(o){return o.y});
+    var y = d3.scale.linear()
+	.domain([min,max])
+	.range([h-40,40]);
+    
+    if ($(".scatter").length == 0) {
+	var scatter = d3.select("#map").append("svg")
+	    .attr("class","scatter")
+	    .attr("width",w)
+	    .attr("height",h)
+	
+	scatter.selectAll("circle")
+	    .data(sData,function(d){return d.zip;})
+	    .enter()
+	    .append("circle")
+	    .attr("cx",function(d){return x(d.x);})
+	    .attr("cy",function(d){return y(d.y);})
+	    .attr("r","3")
+	    .attr("fill",active_colors[4]);
+	
+	scatter.append("g")
+	    .attr("class","axis")
+	    .attr("transform","translate(0," + (h-40) + ")")
+	    .call(d3.svg.axis()
+		  .scale(x)
+		  .orient("bottom")
+		  .ticks(7));
+	scatter.append("g")
+	    .attr("class","axis")
+	    .attr("transform","translate("+40+",0)")
+	    .call(d3.svg.axis()
+		  .scale(y)
+		  .orient("left")
+		  .ticks(7));
+    } else {
+	var scatter = d3.select(".scatter")
+	var circles = scatter.selectAll("circle")
+	    .data(sData,function(d){return d.zip;});
+
+	circles.enter().insert("circle")
+	    .attr("cx",function(d){return x(d.x);})
+	    .attr("cy",function(d){return y(d.y);})
+	    .attr("r","3")
+	    .attr("fill",active_colors[4]);
+
+	circles.transition()
+	    .duration(1000)
+	    .attr("cx",function(d){return x(d.x);})
+	    .attr("cy",function(d){return y(d.y);});
+
+	circles.exit()
+	    .remove();
+    }
+}
+
 // draw bar chart using d3
 function d3barchart(zip) {
     var w = 20, h = 100;
 
-    var barArray = []
+    var barArray = [];
 
     for (c in complaints) {
-	if (d[zip][complaints[c]] != undefined) {
+	if (pdata[zip][complaints[c]] != undefined) {
 	    barArray.push({
 		key: complaints[c],
-		value: d[zip][complaints[c]]
+		value: pdata[zip][complaints[c]]
 	    });
 	} else {
 	    barArray.push({
@@ -146,10 +250,12 @@ function d3barchart(zip) {
     var y = d3.scale.linear().domain([0, max]).range([0,100]);
     var x = d3.scale.ordinal().domain(labels).rangePoints([0,labels.length-1]);
 
+    var colorInd = 4;
+
     if ($(".chart").length == 0) {
 	var chart = d3.select("#sidebar").append("svg")
 	    .attr("class","chart")
-	    .attr("height","200")
+	    .attr("height","400")
 	    .attr("width", 40*barArray.length+100);
 
 	var node = chart.selectAll("g")
@@ -158,7 +264,7 @@ function d3barchart(zip) {
 	    .append("g");
 
 	node.append("rect")
-	    .attr("fill",active_colors[6])
+	    .attr("fill",active_colors[colorInd])
 	    .attr("x", function(d,i){console.log(d.key); return x(i)*40+20; })
 	    .attr("height", function(d) {return y(d.value)})
 	    .attr("y", function(d) {return 100 - y(d.value)})
@@ -170,7 +276,7 @@ function d3barchart(zip) {
 		if (y(d.value) > 18) {
 		    return "#ffffff";
 		} else {
-		    return active_colors[6];
+		    return active_colors[colorInd];
 		}
 	    })
 	    .attr("y", function(d) {
@@ -212,7 +318,7 @@ function d3barchart(zip) {
 	    .data(barArray,function(d) { return d.key; })
 	    .transition()
 	    .duration(1000)
-	    .attr("fill",active_colors[6])
+	    .attr("fill",active_colors[colorInd])
 	    .attr("x", function(d,i){ return x(d.key)*40+20; })
 	    .attr("height", function(d) { return y(d.value) })
 	    .attr("y", function(d) {return 100 - y(d.value)});
@@ -226,7 +332,7 @@ function d3barchart(zip) {
 		if (y(d.value) > 18) {
 		    return "#ffffff";
 		} else {
-		    return active_colors[6];
+		    return active_colors[colorInd];
 		}
 	    })
 	    .attr("y", function(d) {
@@ -356,12 +462,16 @@ function preprocess() {
     var finalData = {};
 
     var zipData = JSON.parse($("#json-zip-complaint").val());
+    var demData = JSON.parse($("#json-demographics").val());
     var zipList = JSON.parse($("#json-zips").val());
     for (z in zipList)
     {
 	finalData[zipList[z]] = {};
 	for (c in complaints) {
 	    finalData[zipList[z]][complaints[c]] = zipData[zipList[z] + " " + complaints[c]];
+	}
+	for (d in demographics) {
+	    finalData[zipList[z]][demographics[d]] = parseFloat(demData[zipList[z] + " " + demographics[d]]);
 	}
     }
 
@@ -381,7 +491,7 @@ function maxInObject(obj,attr) {
 function d3selectComplaint(c) {
     active_complaint = c;
 
-    var maxComplaint = maxInObject(d,c);
+    var maxComplaint = maxInObject(pdata,c);
 
     var quantize = d3.scale.quantize()
         .domain([0, maxComplaint])
@@ -391,9 +501,9 @@ function d3selectComplaint(c) {
 
 	var z = this.id;
 	
-	if (d[z] != undefined) {
-	    if (d[z][c] != undefined) {
-		return active_colors[quantize(d[z][c])];
+	if (pdata[z] != undefined) {
+	    if (pdata[z][c] != undefined) {
+		return active_colors[quantize(pdata[z][c])];
 	    } else {
 		return "#eeeeee";
 	    }
@@ -413,4 +523,8 @@ function d3selectComplaint(c) {
 	.attr('fill',active_colors[4]);
     
     return throwaway;
+}
+
+function randInt (min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
