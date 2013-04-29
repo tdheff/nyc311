@@ -169,7 +169,7 @@ function drawScatter(comp,dem) {
     var max = d3.max(sData,function(o){return o.y});
     var min = d3.min(sData,function(o){return o.y});
     var y = d3.scale.linear()
-	.domain([min,max])
+	.domain([0,max])
 	.range([h-40,40]);
     
     if ($(".scatter").length == 0) {
@@ -189,6 +189,7 @@ function drawScatter(comp,dem) {
 	
 	scatter.append("g")
 	    .attr("class","axis")
+	    .attr("id","x-axis")
 	    .attr("transform","translate(0," + (h-40) + ")")
 	    .call(d3.svg.axis()
 		  .scale(x)
@@ -196,6 +197,7 @@ function drawScatter(comp,dem) {
 		  .ticks(7));
 	scatter.append("g")
 	    .attr("class","axis")
+	    .attr("id","y-axis")
 	    .attr("transform","translate("+40+",0)")
 	    .call(d3.svg.axis()
 		  .scale(y)
@@ -219,6 +221,22 @@ function drawScatter(comp,dem) {
 
 	circles.exit()
 	    .remove();
+
+	scatter.select("#x-axis")
+	    .transition()
+	    .duration(1000)
+	    .call(d3.svg.axis()
+		  .scale(x)
+		  .orient("bottom")
+		  .ticks(7));
+
+	scatter.select("#y-axis")
+	    .transition()
+	    .duration(1000)
+	    .call(d3.svg.axis()
+		  .scale(y)
+		  .orient("left")
+		  .ticks(7));
     }
 }
 
@@ -519,6 +537,9 @@ function d3selectComplaint(c) {
 	.attr('fill',active_colors[4]);
     d3.select('#sidebar')
 	.selectAll('.color')
+	.transition()
+	.attr('fill',active_colors[4]);
+    d3.selectAll('circle')
 	.transition()
 	.attr('fill',active_colors[4]);
     
