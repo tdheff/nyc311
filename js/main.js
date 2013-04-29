@@ -42,6 +42,7 @@ $(document).ready(function() {
 
     // map hover and click callbacks
     $("#svg2 path").hoverIntent(mousein,mouseout);
+    $("circle").hover(circlein,circleout);
     $("#svg2 path").click(select);
 
     // populate selection menus
@@ -70,7 +71,20 @@ $(document).ready(function() {
 
 // takes zipcode, color, colors in that zipcode!
 function colorZip(zip,color) {
-    $("#" + zip).css("fill",color);
+    d3.select("[zip=z"+zip+"]").transition().style("fill",color);
+}
+
+function unColorZip(zip) {
+    d3.select("[zip=z"+zip+"]").transition().style("fill",null);
+}
+
+// takes zipcode, color, colors in that zipcode!
+function colorPoint(zip,color) {
+    d3.select("[zipid="+zip+"]").transition().style("fill",color).attr("r","6");
+}
+
+function unColorPoint(zip) {
+    d3.select("[zipid="+zip+"]").transition().style("fill",null).attr("r","3");
 }
 
 // populated a select item with data
@@ -96,8 +110,9 @@ function mousein(event) {
     // change fill, store old fill in temp, bring up tooltip
     // if color is #333333 then zip has no relevant data, so do nothing
     if ($(this).css("fill") != "#eeeeee") {
-        temp = $(this).css("fill");
-        $(this).css("fill","#666666");
+        d3.select(this).transition().style("fill","grey");
+	var zip = $(this).attr("zip");
+	colorPoint(zip,"grey");
         $("#tooltip").fadeIn(150);
         $('#tooltip').css({
             left: event.pageX,
@@ -121,8 +136,45 @@ function mousein(event) {
 // what to do when mouse leaves
 function mouseout() {
     // recolor zip code, hide tooltip
-    $(this).removeAttr('style');
+    d3.select(this).transition().style("fill",null);
     //$("#tooltip").css("display","none");
+    $("#tooltip").fadeOut(150);
+    var zip = $(this).attr("zip");
+    unColorPoint(zip,"grey");
+}
+
+function circlein(event) {
+    d3.select(this)
+	.transition()
+	.style("fill","grey")
+	.attr("r","6");
+
+    var zip = $(this).attr("zip");
+    colorZip(zip,"grey");
+
+    $("#tooltip").fadeIn(150);
+    $('#tooltip').css({
+        left: event.pageX+10,
+        top: event.pageY-120
+    });
+    $("#tooltip-zip").text($(this).attr("zip"));
+    $("#tooltip-complaints").text(pdata[$(this).attr("zip")][active_complaint]);
+    $(".tooltip-dem-label").remove();
+    $(".tooltip-dem").remove();
+    $("br").remove();
+    for (d in demographics) {
+	$("#tooltip-data").append(
+	    "<br><p class='tooltip-dem-label'>" + demographics[d] + ": </p>" +
+		"<p class='tooltip-dem'>" +
+		pdata[$(this).attr("zip")][demographics[d]] +
+		"</p")
+    }
+}
+
+function circleout() {
+    var zip = $(this).attr("zip");
+    unColorZip(zip,"grey");
+    d3.select(this).transition().style("fill",null).attr("r","3");
     $("#tooltip").fadeOut(150);
 }
 
@@ -208,6 +260,8 @@ function drawScatter(comp,dem) {
 	    .attr("cx",function(d){return x(d.x);})
 	    .attr("cy",function(d){return y(d.y);})
 	    .attr("r","3")
+	    .attr("zip",function(d){return d.zip})
+	    .attr("zipid",function(d){return "z" + d.zip})
 	    .attr("fill",active_colors[4]);
 	
 	scatter.append("g")
@@ -252,6 +306,8 @@ function drawScatter(comp,dem) {
 	circles.enter().insert("circle")
 	    .attr("cx",function(d){return x(d.x);})
 	    .attr("cy",function(d){return y(d.y);})
+	    .attr("zip",function(d){return d.zip})
+	    .attr("zipid",function(d){return "z" + d.zip})
 	    .attr("r","3")
 	    .attr("fill",active_colors[4]);
 
@@ -576,7 +632,7 @@ function d3selectComplaint(c) {
 	    }
 	}
 	return "#eeeeee";
-    });
+    }).attr("zip",function(q){return "z" + this.id});
 
     d3.select('h1').transition().style('color',active_colors[6]);
     d3.select('#subhead').transition().style('color',active_colors[4]);
