@@ -18,7 +18,7 @@ var demographics = ["Median Income","Percent White","Percent Black","Percent His
 // color scale in use
 var active_colors = colors["blue"];
 // highlight color
-var highlight = colors[active_colors[9]][5];
+var highlight = colors[active_colors[9]][3];
 // name of selected zip code
 var selected = null;
 // current complaint data
@@ -56,7 +56,7 @@ $(document).ready(function() {
     // selection callbacks
     $("#complaints-select").change(function () {
 	active_colors = colors[$("#color-select").val().toLowerCase()];
-	highlight = colors[active_colors[9]][5];
+	highlight = colors[active_colors[9]][3];
 	data = d3selectComplaint($("#complaints-select").val());
 	active_complaint = $("#complaints-select").val();
 	drawScatter(active_complaint,active_dem);
@@ -69,7 +69,7 @@ $(document).ready(function() {
 
     $("#color-select").change(function () {
 	active_colors = colors[$("#color-select").val().toLowerCase()];
-	highlight = colors[active_colors[9]][5];
+	highlight = colors[active_colors[9]][3];
 	data = d3selectComplaint($("#complaints-select").val());
     });
 });
@@ -198,7 +198,7 @@ function barOut() {
 function barClick() {
     $("#complaints-select").val(d3.select(this).select(".label").text());
     active_colors = colors[$("#color-select").val().toLowerCase()];
-    highlight = colors[active_colors[9]][5];
+    highlight = colors[active_colors[9]][3];
     data = d3selectComplaint($("#complaints-select").val());
     active_complaint = $("#complaints-select").val();
     drawScatter(active_complaint,active_dem);
