@@ -10,10 +10,10 @@ var colors = {
 var color_names = ["blue","purple","green","red", "grey"];
 
 // names of complaints
-var complaints = ["Fire Hydrant Emergency (FHE)", "Lead", "Rough Pitted or Cracked Roads", "Rat Sighting", "Missed Garbage Collection", "Loud Music/Party", "Pothole", "Asbestos", "School Maintenance", "Boilers", "Dirty Conditions", "Fallen Tree", "Broken Elevator", "Posted Parking Sign Violation", "Loud Talking", "Dirty Water", "Heating", "Vacant Lot", "Plumbing", "Double Parked Blocking Vehicle", "Noise, Ice Cream Truck", "Homeless Encampment", "Congestion/Gridlock", "Taxi Driver Complaint", "Vermin", "Munimeter Issue", "Dead Animals", "Graffiti", "Street Light Out", "Derelict Vehicle", "Sewer Backup"]
+var complaints = ["Fire Hydrant Emergency (FHE)", "Rat Sighting", "Loud Music/Party", "Pothole", "School Maintenance", "Boilers", "Dirty Conditions","Broken Elevator", "Heating", "Plumbing", "Double Parked Blocking Vehicle", "Taxi Driver Complaint", "Vermin", "Dead Animals", "Graffiti", "Street Light Out", "Derelict Vehicle", "Sewer Backup"]
 
 // names of demographic categories
-var demographics = ["Median Income","Mean Income","Total Population","Median Age","Percent White","Percent Black","Percent Hispanic"]
+var demographics = ["Median Income","Percent White","Percent Black","Percent Hispanic"]
 
 // color scale in use
 var active_colors = colors["blue"];
@@ -248,7 +248,7 @@ function drawScatter(comp,dem) {
     }
     
     if ($(".scatter").length == 0) {
-	var scatter = d3.select("#map").append("svg")
+	var scatter = d3.select("#scatter").append("svg")
 	    .attr("class","scatter")
 	    .attr("width",w)
 	    .attr("height",h)

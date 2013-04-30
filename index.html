@@ -1,3 +1,13 @@
+<!--
+
+NYC311 by Tommy Heffernan and Jonathan Yip
+
+New York City SVG Map is from Kenny Peng's VisioNYC Project: https://github.com/kpeng/visionyc
+311 Data is from NYC Open Data: https://nycopendata.socrata.com/
+
+-->
+
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -42,8 +52,9 @@
          xmlns="http://www.w3.org/2000/svg"
          xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
          xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-         width="900"
+         width="750"
          height="600"
+         viewbox="40 50 750 500"
          id="svg2"
          version="1.1"
          inkscape:version="0.48.3.1 r9886"
@@ -1130,12 +1141,17 @@
            id="10282"
            inkscape:connector-curvature="0" />
     </svg>
-      <select id="dem-select"></select>
     </div>
+
+    <div id="scatter"></div>
+    <select id="dem-select">_</select>
 
     <div id="sidebar">
       <div id="zip"> click on a zip code for more information.</div>
-      <div id="graph"><br/><br /><p class="info">New York City's 311 phone number was introduced by Mayor Michael Bloomberg in 2003 to consolidate 11-pages of government phone numbers into just one number. In the 21 complaint categories shown here, New Yorkers made 537,247 calls to 311 in 2012, representing a third of all the complaints lodged with 311 in 2012.</p><br /><p class="info">The 311 call data is from NYC.gov's Open Data Initiative. Complaints are a selection of notable complaint categories. Data span calendar year 2012.  Map from VisionNYC Project. By Tommy Heffernan and Jonathan Yip.</p></div>
+      <div id="graph"><br/><br /><p class="info">New York City's 311 phone number was introduced by Mayor Michael Bloomberg in 2003 to consolidate 11-pages of government phone numbers into just one number.</p><br /><p class="info">The 311 call data is from NYC.gov's Open Data Initiative. Complaints are a selection of notable complaint categories. <br /> Data span calendar year 2012.  Map from VisionNYC Project. By Tommy Heffernan and Jonathan Yip.
+      <br />Bibliographic Information: Peng, Kenny. "VisioNYC." Kpeng / Visionyc., 11 Feb. 2012. Web. 1 Apr. 2013. &lt;<a href="https://github.com/kpeng/visionyc">https://github.com/kpeng/visionyc</a>&gt;.
+      </p>
+      </div>
     </div>
 
   </body>

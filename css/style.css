@@ -170,7 +170,7 @@ div.bar {
     width: 400px;
     text-align: center;
     font-size: 1.0em;
-    /*font-weight: bold;*/
+    font-weight: bold;
     margin-bottom: 10px;
 }
 
@@ -183,6 +183,7 @@ div.bar {
     left: 40px;
     top: 99px;
     color: #555555;
+    font-size: 0.75em;
     /* font-weight: bold; */
 }
 
@@ -193,7 +194,7 @@ div.bar {
 }
     
 .info {
-    font-size: 0.8em;
+    font-size: 0.75em;
 }
 
 .chart rect {
@@ -201,7 +202,7 @@ div.bar {
 }
 
 .chart text {
-    font-size: 0.8em;
+    font-size: 0.7em;
 }
 
 .axis path,
@@ -212,15 +213,22 @@ div.bar {
 }
 
 .axis text {
-    font-size: 11px;
+    font-size: 10px;
 }
 
 #dem-select {
     position: absolute;
-    top: 635px;
-    right: 30px;
+    top: 120px;
+    right: 80px;
+    font-size: 0.75em;
 }
 
 line {
-    stroke-width: 2px;
+    stroke-width: 3px;
 }
+
+#scatter {
+    position: absolute;
+    top: 80px;
+    left: 775px;
+    }
