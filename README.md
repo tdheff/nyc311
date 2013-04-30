@@ -19,6 +19,9 @@ Most of the work is done in main.js. The onload function sets up some basic stuf
 
 jquery is used heavily, and is located in the js folder. hoverintent is also used (only once to replace hover), and is again in the js folder. d3 is used lightly, mostly for quantizing data scales, and can also be found in the js folder.
 
+SVG Map is from Kenny Peng:
+Peng, Kenny. "VisioNYC." Kpeng / Visionyc., 11 Feb. 2012. Web. 1 Apr. 2013. https://github.com/kpeng/visionyc
+
 #
 # Data Location:
 #
