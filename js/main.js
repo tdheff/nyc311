@@ -1,10 +1,10 @@
 // colors scales used
 var colors = {
-    blue: ["#FFFFD9", "#EDF8B1", "#C7E9B4", "#7FCDBB", "#41B6C4", "#1D91C0", "#225EA8", "#253494", "#081D58"],
-    purple: ["#FFF7F3", "#FDE0DD", "#FCC5C0", "#FA9FB5", "#F768A1", "#DD3497", "#AE017E", "#7A0177", "#49006A"],
-    green: ["#FFFFE5", "#F7FCB9", "#D9F0A3", "#ADDD8E", "#78C679", "#41AB5D", "#238443", "#006837", "#004529"],
-    red: ["#FFFFCC", "#FFEDA0", "#FED976", "#FEB34C", "#FD8D3C", "#FC4E2A", "#E31A1C", "#BD0026", "#800026"],
-    grey: ["#FFFFFF", "#F0F0F0", "#D9D9D9", "#BDBDBD", "#969696", "#737373", "#525252", "#252525", "#000000"]
+    blue: ["#FFFFD9", "#EDF8B1", "#C7E9B4", "#7FCDBB", "#41B6C4", "#1D91C0", "#225EA8", "#253494", "#081D58","red"],
+    purple: ["#FFF7F3", "#FDE0DD", "#FCC5C0", "#FA9FB5", "#F768A1", "#DD3497", "#AE017E", "#7A0177", "#49006A","green"],
+    green: ["#FFFFE5", "#F7FCB9", "#D9F0A3", "#ADDD8E", "#78C679", "#41AB5D", "#238443", "#006837", "#004529","purple"],
+    red: ["#FFFFCC", "#FFEDA0", "#FED976", "#FEB34C", "#FD8D3C", "#FC4E2A", "#E31A1C", "#BD0026", "#800026","blue"],
+    grey: ["#FFFFFF", "#F0F0F0", "#D9D9D9", "#BDBDBD", "#969696", "#737373", "#525252", "#252525", "#000000","red"]
 }
 // names for color scales
 var color_names = ["blue","purple","green","red", "grey"];
@@ -110,9 +110,9 @@ function mousein(event) {
     // change fill, store old fill in temp, bring up tooltip
     // if color is #333333 then zip has no relevant data, so do nothing
     if ($(this).css("fill") != "#eeeeee") {
-        d3.select(this).transition().style("fill","grey");
+        d3.select(this).transition().style("fill",colors[active_colors[9]][5]);
 	var zip = $(this).attr("zip");
-	colorPoint(zip,"grey");
+	colorPoint(zip,colors[active_colors[9]][5]);
         $("#tooltip").fadeIn(150);
         $('#tooltip').css({
             left: event.pageX,
@@ -146,11 +146,11 @@ function mouseout() {
 function circlein(event) {
     d3.select(this)
 	.transition()
-	.style("fill","grey")
+	.style("fill",colors[active_colors[9]][5])
 	.attr("r","6");
 
     var zip = $(this).attr("zip");
-    colorZip(zip,"grey");
+    colorZip(zip,colors[active_colors[9]][5]);
 
     $("#tooltip").fadeIn(150);
     $('#tooltip').css({
