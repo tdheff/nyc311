@@ -17,6 +17,8 @@ var demographics = ["Median Income","Percent White","Percent Black","Percent His
 
 // color scale in use
 var active_colors = colors["blue"];
+// highlight color
+var highlight = colors[active_colors[9]][5];
 // name of selected zip code
 var selected = null;
 // current complaint data
@@ -44,6 +46,7 @@ $(document).ready(function() {
     $("#svg2 path").hoverIntent(mousein,mouseout);
     $("circle").hover(circlein,circleout);
     $("#svg2 path").click(select);
+    $("circle").click(select);
 
     // populate selection menus
     fillSelect("complaints-select",complaints);
@@ -53,6 +56,7 @@ $(document).ready(function() {
     // selection callbacks
     $("#complaints-select").change(function () {
 	active_colors = colors[$("#color-select").val().toLowerCase()];
+	highlight = colors[active_colors[9]][5];
 	data = d3selectComplaint($("#complaints-select").val());
 	active_complaint = $("#complaints-select").val();
 	drawScatter(active_complaint,active_dem);
@@ -65,6 +69,7 @@ $(document).ready(function() {
 
     $("#color-select").change(function () {
 	active_colors = colors[$("#color-select").val().toLowerCase()];
+	highlight = colors[active_colors[9]][5];
 	data = d3selectComplaint($("#complaints-select").val());
     });
 });
@@ -110,9 +115,9 @@ function mousein(event) {
     // change fill, store old fill in temp, bring up tooltip
     // if color is #333333 then zip has no relevant data, so do nothing
     if ($(this).css("fill") != "#eeeeee") {
-        d3.select(this).transition().style("fill",colors[active_colors[9]][5]);
+        d3.select(this).transition().style("fill",highlight);
 	var zip = $(this).attr("zip");
-	colorPoint(zip,colors[active_colors[9]][5]);
+	colorPoint(zip,highlight);
         $("#tooltip").fadeIn(150);
         $('#tooltip').css({
             left: event.pageX,
@@ -146,11 +151,11 @@ function mouseout() {
 function circlein(event) {
     d3.select(this)
 	.transition()
-	.style("fill",colors[active_colors[9]][5])
+	.style("fill",highlight)
 	.attr("r","6");
 
     var zip = $(this).attr("zip");
-    colorZip(zip,colors[active_colors[9]][5]);
+    colorZip(zip,highlight);
 
     $("#tooltip").fadeIn(150);
     $('#tooltip').css({
@@ -178,6 +183,27 @@ function circleout() {
     $("#tooltip").fadeOut(150);
 }
 
+function barIn() {
+    d3.select(this).select("rect").transition().style("fill",highlight);
+    d3.select(this).select(".label").transition().style("fill",highlight);
+    d3.select(this).select(".color").transition().style("fill",highlight);
+}
+
+function barOut() {
+    d3.select(this).select("rect").transition().style("fill",null);
+    d3.select(this).select(".label").transition().style("fill",null);
+    d3.select(this).select(".color").transition().style("fill",null);
+}
+
+function barClick() {
+    $("#complaints-select").val(d3.select(this).select(".label").text());
+    active_colors = colors[$("#color-select").val().toLowerCase()];
+    highlight = colors[active_colors[9]][5];
+    data = d3selectComplaint($("#complaints-select").val());
+    active_complaint = $("#complaints-select").val();
+    drawScatter(active_complaint,active_dem);
+}
+
 // what to do when zip is clicked on
 function select() {
     // if the bar chart is created succesfully, set bar chart title and selected zip variable
@@ -188,7 +214,11 @@ function select() {
     
     $("#zip").fadeOut();
     $("#graph").fadeOut();
-    d3barchart($(this).attr("id"));
+    var z = $(this).attr("id");
+    if (z == null) {
+	z = $(this).attr("zip");
+    }
+    d3barchart(z);
     if (!hasChart) {
 	$(".chart").css("display","none").delay(450).fadeIn();
 	hasChart = true;
@@ -486,6 +516,12 @@ function d3barchart(zip) {
 		return str;
 	    });
     }
+
+    d3.select("#bar-zip-label").transition().style("color","white")
+	.transition().delay(500).text(zip).style("color","#555555");
+
+    $("g").hover(barIn,barOut);
+    $("g").click(barClick);
 }
 
 // draw bar chart

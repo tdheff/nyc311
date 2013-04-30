@@ -70,8 +70,15 @@ body {
 #sidebar {
     background: #ffffff;
     padding: 20px;
-    color: #555555;
     border-top: solid 1px #dddddd;
+}
+
+#sidebar text {
+    color: #555555;
+}
+
+#sidebar p{
+    color: #555555;
 }
 
 select {
@@ -123,6 +130,7 @@ path {
     color: #555555;
     padding: 5px;
     display: none;
+    z-index: 100;
 }
 
 #tooltip-data {
@@ -172,6 +180,7 @@ div.bar {
     font-size: 1.0em;
     font-weight: bold;
     margin-bottom: 10px;
+    color: #555555;
 }
 
 #subhead {
@@ -195,6 +204,17 @@ div.bar {
     
 .info {
     font-size: 0.75em;
+}
+
+#bar-zip-label {
+    display: inline;
+    float: left;
+    font-size: 1.6em;
+    margin-top: 36px;
+}
+
+.chart {
+    float: left;
 }
 
 .chart rect {
@@ -230,5 +250,5 @@ line {
 #scatter {
     position: absolute;
     top: 80px;
-    left: 775px;
-    }
+    left: 800px;
+}
