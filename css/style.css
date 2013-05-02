@@ -204,6 +204,8 @@ div.bar {
     
 .info {
     font-size: 0.75em;
+    margin-top: 5px;
+    margin-bottom: 15px;
 }
 
 #bar-zip-label {
@@ -265,11 +267,11 @@ line {
 }
 
 #presets {
-    float: left;
-    
+    position: absolute;
+    top: 20px;
+    left: 650px;
     font-size: 0.4em;
     color: #555555;
-    float: left;
 }
 
 #presets p {
