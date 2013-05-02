@@ -44,8 +44,8 @@ $(document).ready(function() {
 
     // map hover and click callbacks
     $("#svg2 path").hoverIntent(mousein,mouseout);
-    $("circle").hover(circlein,circleout);
     $("#svg2 path").click(select);
+    $("circle").hover(circlein,circleout);
     $("circle").click(select);
 
     // populate selection menus
@@ -373,6 +373,9 @@ function drawScatter(comp,dem) {
 	    .attr("x2",x(xmax))
 	    .attr("y2",y(b0+b1*(xmax-xmin)))
     }
+
+    $("circle").hover(circlein,circleout);
+    $("circle").click(select);
 }
 
 // draw bar chart using d3
