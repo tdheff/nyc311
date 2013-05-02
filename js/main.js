@@ -43,10 +43,12 @@ $(document).ready(function() {
     drawScatter(active_complaint,active_dem);
 
     // map hover and click callbacks
-    $("#svg2 path").hoverIntent(mousein,mouseout);
+    $("#svg2 path").hoverIntent(mouseIn,mouseOut);
     $("#svg2 path").click(select);
-    $("circle").hover(circlein,circleout);
+    $("circle").hover(circleIn,circleOut);
     $("circle").click(select);
+    $(".preset").hover(presetIn,presetOut);
+    $(".preset").click(presetSelect);
 
     // populate selection menus
     fillSelect("complaints-select",complaints);
@@ -111,7 +113,7 @@ function getCount(zip, data) {
 }
 
 // what to do on hover (with intent)
-function mousein(event) {
+function mouseIn(event) {
     // change fill, store old fill in temp, bring up tooltip
     // if color is #333333 then zip has no relevant data, so do nothing
     if ($(this).css("fill") != "#eeeeee") {
@@ -139,7 +141,7 @@ function mousein(event) {
 }
 
 // what to do when mouse leaves
-function mouseout() {
+function mouseOut() {
     // recolor zip code, hide tooltip
     d3.select(this).transition().style("fill",null);
     //$("#tooltip").css("display","none");
@@ -148,7 +150,7 @@ function mouseout() {
     unColorPoint(zip,"grey");
 }
 
-function circlein(event) {
+function circleIn(event) {
     d3.select(this)
 	.transition()
 	.style("fill",highlight)
@@ -176,7 +178,7 @@ function circlein(event) {
     }
 }
 
-function circleout() {
+function circleOut() {
     var zip = $(this).attr("zip");
     unColorZip(zip,"grey");
     d3.select(this).transition().style("fill",null).attr("r","3");
@@ -202,6 +204,52 @@ function barClick() {
     data = d3selectComplaint($("#complaints-select").val());
     active_complaint = $("#complaints-select").val();
     drawScatter(active_complaint,active_dem);
+}
+
+function presetIn() {
+    d3.select(this).transition().style("background-color",active_colors[3]);
+}
+
+function presetOut() {
+    d3.select(this).transition().style("background-color",null);
+}
+
+function presetSelect() {
+    var id = d3.select(this).attr("id");
+    if (id == "p1") {
+	active_complaint = "Plumbing";
+	active_dem = "Percent White";
+	$("#complaints-select").val(active_complaint);
+	$("#dem-select").val(active_dem);
+	data = d3selectComplaint($("#complaints-select").val());
+	drawScatter(active_complaint,active_dem);
+    } else if (id == "p2") {
+	active_complaint = "Vermin";
+	active_dem = "Median Income";
+	$("#complaints-select").val(active_complaint);
+	$("#dem-select").val(active_dem);
+	data = d3selectComplaint($("#complaints-select").val());
+	drawScatter(active_complaint,active_dem);
+    } else if (id == "p3") {
+	active_complaint = "Graffiti";
+	active_dem = "Median Income";
+	$("#complaints-select").val(active_complaint);
+	$("#dem-select").val(active_dem);
+	data = d3selectComplaint($("#complaints-select").val());
+	drawScatter(active_complaint,active_dem);
+    } else if (id == "p4") {
+	active_complaint = "Taxi Driver Complaint";
+	active_dem = "Percent Black";
+	$("#complaints-select").val(active_complaint);
+	$("#dem-select").val(active_dem);
+	data = d3selectComplaint(active_complaint);
+	drawScatter(active_complaint,active_dem);
+    }
+    d3.select(this).attr("class","preset preset-selected");
+}
+
+function clearPresets() {
+    d3.selectAll(".preset").attr("class","preset");
 }
 
 // what to do when zip is clicked on
@@ -242,8 +290,6 @@ function drawScatter(comp,dem) {
 		zip: z});
 	}
     }
-
-    console.log(sData);
     
     var xmax = d3.max(sData,function(o){return o.x});
     var xmin = d3.min(sData,function(o){return o.x});
@@ -374,8 +420,9 @@ function drawScatter(comp,dem) {
 	    .attr("y2",y(b0+b1*(xmax-xmin)))
     }
 
-    $("circle").hover(circlein,circleout);
+    $("circle").hover(circleIn,circleOut);
     $("circle").click(select);
+    clearPresets();
 }
 
 // draw bar chart using d3
@@ -421,7 +468,7 @@ function d3barchart(zip) {
 
 	node.append("rect")
 	    .attr("fill",active_colors[colorInd])
-	    .attr("x", function(d,i){console.log(d.key); return x(i)*40+20; })
+	    .attr("x", function(d,i){return x(i)*40+20; })
 	    .attr("height", function(d) {return y(d.value)})
 	    .attr("y", function(d) {return 100 - y(d.value)})
 	    .attr("width", 40);
@@ -467,8 +514,6 @@ function d3barchart(zip) {
 	
 	var node = chart.selectAll("g")
 	    .data(barArray,function(d) { return d.key; });
-
-	console.log(barArray);
 	
 	node.selectAll("rect")
 	    .data(barArray,function(d) { return d.key; })
@@ -607,13 +652,6 @@ function changeComplaint(complaint, zips, colors) {
     $(".bar").css("color", "white");
     for (var j = 0; j < zipCount.zip.length; j++)
     {
-        //console.log(JSON.stringify(zipCount.count[j]));
-        //console.log(JSON.stringify(quantize(zipCount.count[j])));
-
-        //if (document.getElementById(zipCount.zip[j]))
-        //    console.log(JSON.stringify(zipCount.zip[j]));
-        //console.log(JSON.stringify(quantize(zipCount.count[j])));
-        //console.log(j,zipCount.zip[j],zipCount.count[j],quantize(zipCount.count[j]));
         colorZip(zipCount.zip[j], colors[quantize(zipCount.count[j])]);
     }
 

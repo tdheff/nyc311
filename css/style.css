@@ -60,7 +60,7 @@ body {
 #topbar {
     background: #ffffff;
     border-bottom: solid 1px #dddddd;
-    height: 100%;
+    height: 56px;
     /*color: #DD3497;*/
     font-size: 1.8em;
     /*font-weight: bold;*/
@@ -251,4 +251,40 @@ line {
     position: absolute;
     top: 80px;
     left: 800px;
+}
+
+#header {
+    float: left;
+}
+
+#preset-intro {
+    color: #555555;
+    width: 300px;
+    padding-top: 10px;
+    padding-left: 20px;
+}
+
+#presets {
+    float: left;
+    
+    font-size: 0.4em;
+    color: #555555;
+    float: left;
+}
+
+#presets p {
+    float: left;
+}
+
+.preset {
+    width: 80px;
+    padding: 5px;
+    margin-top: 5px;
+    margin-left: 10px;
+    border: solid 1px #dddddd;
+    background-color: #ffffff;
+}
+
+.preset-selected {
+    border: solid 1px #555555;
 }
